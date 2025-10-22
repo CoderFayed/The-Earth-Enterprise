@@ -2274,6 +2274,179 @@
             // Set default export format
             document.querySelector('.export-option[data-format="excel"]').click();
         });
+        // Remove all Firebase code and replace with:
+
+// Base API URL - change to your computer's IP for LAN access
+const API_BASE = 'http://localhost:3000/api';
+
+// Initialize variables
+let transactions = [];
+let selectedTransactions = new Set();
+let currentPage = 1;
+const transactionsPerPage = 10;
+let selectedFormat = 'excel';
+let exportInProgress = false;
+let pieChart, barChart;
+const darkMode = localStorage.getItem('darkMode') === 'true';
+
+// Load transactions from local server
+async function loadTransactions() {
+    try {
+        const response = await fetch(`${API_BASE}/transactions`);
+        transactions = await response.json();
+        renderTrackerTransactions();
+        updateSummary();
+        updateCharts();
+    } catch (error) {
+        console.error('Error loading transactions:', error);
+        showNotification('Failed to load transactions', 'error');
+    }
+}
+
+// Add transaction
+async function addTransaction(transaction) {
+    try {
+        const response = await fetch(`${API_BASE}/transactions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(transaction)
+        });
+        
+        if (response.ok) {
+            await loadTransactions(); // Reload all transactions
+            showNotification('Transaction added successfully!', 'success');
+            return true;
+        } else {
+            throw new Error('Failed to add transaction');
+        }
+    } catch (error) {
+        console.error('Error adding transaction:', error);
+        showNotification('Failed to add transaction', 'error');
+        return false;
+    }
+}
+
+// Delete transaction
+async function deleteTransaction(id) {
+    try {
+        const response = await fetch(`${API_BASE}/transactions/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            await loadTransactions(); // Reload all transactions
+            showNotification('Transaction deleted successfully!', 'success');
+        } else {
+            throw new Error('Failed to delete transaction');
+        }
+    } catch (error) {
+        console.error('Error deleting transaction:', error);
+        showNotification('Failed to delete transaction', 'error');
+    }
+}
+
+// Clear all transactions
+async function clearAllTransactions() {
+    try {
+        const response = await fetch(`${API_BASE}/transactions`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            transactions = [];
+            renderTrackerTransactions();
+            updateSummary();
+            updateCharts();
+            showNotification('All transactions cleared!', 'success');
+        } else {
+            throw new Error('Failed to clear transactions');
+        }
+    } catch (error) {
+        console.error('Error clearing transactions:', error);
+        showNotification('Failed to clear transactions', 'error');
+    }
+}
+
+// Update summary from server
+async function updateSummary() {
+    try {
+        const response = await fetch(`${API_BASE}/summary`);
+        const summary = await response.json();
+        
+        const income = summary.totalIncome || 0;
+        const expense = summary.totalExpense || 0;
+        const balanceAmount = summary.balance || 0;
+        
+        totalIncome.textContent = `৳${income.toFixed(2)}`;
+        totalExpense.textContent = `৳${expense.toFixed(2)}`;
+        balance.textContent = `৳${balanceAmount.toFixed(2)}`;
+        headerBalance.textContent = `৳${balanceAmount.toFixed(2)}`;
+        
+        // Update balance color
+        if (balanceAmount > 0) {
+            balance.classList.remove('text-red-600', 'text-gray-800');
+            balance.classList.add('text-green-600');
+        } else if (balanceAmount < 0) {
+            balance.classList.remove('text-green-600', 'text-gray-800');
+            balance.classList.add('text-red-600');
+        } else {
+            balance.classList.remove('text-green-600', 'text-red-600');
+            balance.classList.add('text-gray-800');
+        }
+    } catch (error) {
+        console.error('Error loading summary:', error);
+    }
+}
+
+// Update your transaction form handler
+async function handleAddTransaction(e) {
+    e.preventDefault();
+    
+    const date = document.getElementById('date').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const type = typeInput.value;
+    const note = document.getElementById('note').value;
+    
+    if (!date || isNaN(amount) || amount <= 0 || !note) {
+        alert('Please fill all fields correctly');
+        return;
+    }
+    
+    const transaction = {
+        date,
+        amount,
+        type,
+        note
+    };
+    
+    const success = await addTransaction(transaction);
+    
+    if (success) {
+        // Reset form
+        transactionForm.reset();
+        document.getElementById('date').valueAsDate = new Date();
+    }
+}
+
+// Update clear all handler
+async function handleClearAll() {
+    if (confirm('Are you sure you want to delete ALL transactions? This cannot be undone.')) {
+        await clearAllTransactions();
+    }
+}
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', function() {
+    // ... keep your existing initialization code ...
+    
+    // Load transactions from server
+    loadTransactions();
+    
+    // Update your existing event listeners to use the new async functions
+});
     </script>
 </body>
 </html>
+
