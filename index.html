@@ -220,7 +220,7 @@
             top: -6px;
             left: -6px;
             width: calc(100% + 6px);
-            height: calc(100% + 6px);
+            height = calc(100% + 6px);
             border-radius: 50%;
             border: 3px solid transparent;
             border-bottom: 3px solid #764ba2;
@@ -486,11 +486,6 @@
                     <span id="errorMessage">Incorrect password. Please try again.</span>
                 </div>
             </div>
-
-            <div class="mt-6 text-center text-sm text-gray-600">
-                <p>Default Password: <strong>earth123</strong></p>
-                <p class="mt-2 text-xs">You can change this in the app settings</p>
-            </div>
         </div>
     </div>
 
@@ -512,7 +507,7 @@
                     <div class="flex items-center space-x-4">
                         <div class="hidden md:flex items-center space-x-2 bg-white/10 rounded-full px-4 py-2">
                             <i class="fas fa-wallet"></i>
-                            <span id="headerBalance" class="font-semibold">?0.00</span>
+                            <span id="headerBalance" class="font-semibold">৳0.00</span>
                         </div>
                         
                         <div class="user-menu">
@@ -566,7 +561,7 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <p class="text-gray-600 dark:text-gray-300">Total Credit</p>
-                                <h3 id="totalIncome" class="text-3xl font-bold text-gray-800 dark:text-white">?0.00</h3>
+                                <h3 id="totalIncome" class="text-3xl font-bold text-gray-800 dark:text-white">৳0.00</h3>
                             </div>
                             <div class="p-3 bg-green-500 rounded-full text-white">
                                 <i class="fas fa-arrow-down text-xl"></i>
@@ -579,7 +574,7 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <p class="text-gray-600 dark:text-gray-300">Total Debit</p>
-                                <h3 id="totalExpense" class="text-3xl font-bold text-gray-800 dark:text-white">?0.00</h3>
+                                <h3 id="totalExpense" class="text-3xl font-bold text-gray-800 dark:text-white">৳0.00</h3>
                             </div>
                             <div class="p-3 bg-red-500 rounded-full text-white">
                                 <i class="fas fa-arrow-up text-xl"></i>
@@ -592,7 +587,7 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <p class="text-gray-600 dark:text-gray-300">Current Balance</p>
-                                <h3 id="balance" class="text-3xl font-bold text-gray-800 dark:text-white">?0.00</h3>
+                                <h3 id="balance" class="text-3xl font-bold text-gray-800 dark:text-white">৳0.00</h3>
                             </div>
                             <div class="p-3 bg-blue-500 rounded-full text-white">
                                 <i class="fas fa-balance-scale text-xl"></i>
@@ -1003,7 +998,7 @@
         const darkMode = localStorage.getItem('darkMode') === 'true';
         
         // Password configuration
-        const DEFAULT_PASSWORD = 'earth123';
+        const DEFAULT_PASSWORD = '966907';
         let appPassword = localStorage.getItem('appPassword') || DEFAULT_PASSWORD;
 
         // DOM elements
@@ -1096,7 +1091,7 @@
 
         // Create circular text for logo
         function createCircularText() {
-            const text = "THE EARTH ENTERPRISE � ";
+            const text = "THE EARTH ENTERPRISE • ";
             const circularText = document.querySelector('.text-ring');
             const radius = 110;
             const angle = 360 / text.length;
@@ -1550,7 +1545,7 @@
                             </span>
                         </td>
                         <td class="py-3 font-bold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}">
-                            ?${transaction.amount.toFixed(2)}
+                            ৳${transaction.amount.toFixed(2)}
                         </td>
                         <td class="py-3 text-gray-800 dark:text-gray-200">${transaction.note}</td>
                         <td class="py-3">
@@ -1623,10 +1618,10 @@
                 
             const balanceAmount = income - expense;
             
-            totalIncome.textContent = `?${income.toFixed(2)}`;
-            totalExpense.textContent = `?${expense.toFixed(2)}`;
-            balance.textContent = `?${balanceAmount.toFixed(2)}`;
-            headerBalance.textContent = `?${balanceAmount.toFixed(2)}`;
+            totalIncome.textContent = `৳${income.toFixed(2)}`;
+            totalExpense.textContent = `৳${expense.toFixed(2)}`;
+            balance.textContent = `৳${balanceAmount.toFixed(2)}`;
+            headerBalance.textContent = `৳${balanceAmount.toFixed(2)}`;
             
             // Update balance color based on value
             if (balanceAmount > 0) {
@@ -1684,7 +1679,7 @@
                                     const value = context.raw || 0;
                                     const total = income + expense;
                                     const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
-                                    return `${label}: ?${value.toFixed(2)} (${percentage}%)`;
+                                    return `${label}: ৳${value.toFixed(2)} (${percentage}%)`;
                                 }
                             }
                         }
@@ -1739,7 +1734,7 @@
                             ticks: {
                                 color: document.body.classList.contains('dark') ? '#cbd5e1' : '#374151',
                                 callback: function(value) {
-                                    return '?' + value;
+                                    return '৳' + value;
                                 }
                             }
                         }
@@ -2037,7 +2032,7 @@
                             </span>
                         </td>
                         <td class="py-3 font-bold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}">
-                            ?${transaction.amount.toFixed(2)}
+                            ৳${transaction.amount.toFixed(2)}
                         </td>
                         <td class="py-3 text-gray-800 dark:text-gray-200">${transaction.note}</td>
                     </tr>
@@ -2193,7 +2188,7 @@
             const tableData = data.map(t => [
                 formatDate(t.date),
                 t.type === 'income' ? 'Credit' : 'Debit',
-                `?${t.amount.toFixed(2)}`,
+                `৳${t.amount.toFixed(2)}`,
                 t.note
             ]);
 
@@ -2213,9 +2208,9 @@
 
             doc.autoTable({
                 body: [
-                    ['Total Credit', `?${income.toFixed(2)}`],
-                    ['Total Debit', `?${expense.toFixed(2)}`],
-                    ['Net Balance', `?${balance.toFixed(2)}`]
+                    ['Total Credit', `৳${income.toFixed(2)}`],
+                    ['Total Debit', `৳${expense.toFixed(2)}`],
+                    ['Net Balance', `৳${balance.toFixed(2)}`]
                 ],
                 startY: doc.lastAutoTable.finalY + 10,
                 styles: { fontSize: 10, fontStyle: 'bold' },
